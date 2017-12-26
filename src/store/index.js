@@ -85,7 +85,7 @@ export const store = new Vuex.Store({
         .then(data => {
           const key = data.key
           commit('createMeetup', {
-            ...meetup,
+            ...meetup, // 解構賦值
             id: key
           })
         })
