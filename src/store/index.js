@@ -61,7 +61,8 @@ export const store = new Vuex.Store({
               title: obj[i].title,
               description: obj[i].description,
               imgUrl: obj[i].imgUrl,
-              location: obj[i].location
+              location: obj[i].location,
+              createId: obj[i].createId
             })
           }
           commit('setLoadMeetsUp', meetsup)
@@ -72,14 +73,15 @@ export const store = new Vuex.Store({
           console.log(err)
         })
     },
-    createMeetUp ({commit}, payload) {
+    createMeetUp ({commit, getters}, payload) {
       const meetup = {
         // id: payload.id, firebase會自動幫我們生成一組特殊id
         title: payload.title,
         description: payload.description,
         imgUrl: payload.imgUrl,
         location: payload.location,
-        date: payload.date.toISOString()
+        date: payload.date.toISOString(),
+        createId: getters.user.id
       }
       firebase.database().ref('data').push(meetup)
         .then(data => {
