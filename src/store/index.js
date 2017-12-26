@@ -69,8 +69,8 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
         })
         .catch(err => {
-          commit('setLoading', true)
           console.log(err)
+          commit('setLoading', false)
         })
     },
     createMeetUp ({commit, getters}, payload) {
