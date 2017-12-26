@@ -1,8 +1,19 @@
 <template>
   <v-container>
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular 
+          indeterminate color="primary"
+          :size="60"
+          :width="3"
+          v-if="loading"
+        >
+        </v-progress-circular>
+      </v-flex>
+    </v-layout>
     <v-layout row wrap>
       <v-flex xs12>
-        <v-carousel style="cursor: pointer;">
+        <v-carousel style="cursor: pointer;" v-if="!loading">
           <v-carousel-item 
             v-for="meetup in meetups" 
             v-bind:src="meetup.imgUrl" 
@@ -33,6 +44,9 @@
     computed: {
       meetups () {
         return this.$store.getters.featureMeetups
+      },
+      loading () {
+        return this.$store.getters.loading
       }
     },
     methods: {

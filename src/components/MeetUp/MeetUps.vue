@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="mt-1">
     <v-layout row wrap class="mb-2"  v-for="meetup in meetups" :key="meetup.id">
       <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
         <v-card class="info">

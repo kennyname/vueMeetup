@@ -29,8 +29,11 @@ export const store = new Vuex.Store({
     error: null
   },
   mutations: {
-    createMeetUp (state, payload) {
+    createMeetup (state, payload) {
       state.meetsupData.push(payload)
+    },
+    setLoadMeetsUp (state, payload) {
+      state.meetsupData = payload
     },
     setUser (state, payload) {
       state.user = payload
@@ -46,17 +49,49 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    loadMeetsUp ({commit}) {
+      commit('setLoading', true)
+      firebase.database().ref('data').once('value')
+        .then(data => {
+          const meetsup = []
+          const obj = data.val()// firebase 內建 val()是一個物件
+          for (let i in obj) {
+            meetsup.push({
+              id: i,
+              title: obj[i].title,
+              description: obj[i].description,
+              imgUrl: obj[i].imgUrl,
+              location: obj[i].location
+            })
+          }
+          commit('setLoadMeetsUp', meetsup)
+          commit('setLoading', false)
+        })
+        .catch(err => {
+          commit('setLoading', true)
+          console.log(err)
+        })
+    },
     createMeetUp ({commit}, payload) {
       const meetup = {
-        id: payload.id,
+        // id: payload.id, firebase會自動幫我們生成一組特殊id
         title: payload.title,
         description: payload.description,
         imgUrl: payload.imgUrl,
         location: payload.location,
-        date: payload.date
+        date: payload.date.toISOString()
       }
-      // settiong firebase
-      commit('createMeetUp', meetup)
+      firebase.database().ref('data').push(meetup)
+        .then(data => {
+          const key = data.key
+          commit('createMeetup', {
+            ...meetup,
+            id: key
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     signUserUp ({commit}, payload) {
       commit('setLoading', true)
