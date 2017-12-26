@@ -79,7 +79,7 @@
     },
     methods: {
       onLogout () {
-        this.$store.dispath('logout')
+        this.$store.dispatch('logout')
       }
     }
   }
