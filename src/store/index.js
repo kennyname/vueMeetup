@@ -55,7 +55,7 @@ export const store = new Vuex.Store({
         .then(data => {
           const meetsup = []
           const obj = data.val()// firebase 內建 val()是一個物件
-          for (let i in obj) {
+          for (let i in obj) { // for...in是來用物件迴圈的
             meetsup.push({
               id: i,
               title: obj[i].title,
