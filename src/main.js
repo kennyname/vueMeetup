@@ -33,7 +33,7 @@ new Vue({
     this.$store.dispatch('loadMeetsUp')
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.$store.dispatch('autoSignIn', user) // 7:03
+        this.$store.dispatch('autoSignIn', user)
       }
     })
   }

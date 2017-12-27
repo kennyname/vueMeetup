@@ -66,6 +66,12 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <div class="text">
+      <h1>gggggggg</h1>
+      <div class="box">
+        <p>dasd</p>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -109,5 +115,6 @@
     }
   }
 </script>
+
 
 

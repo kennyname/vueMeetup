@@ -34,14 +34,14 @@
           </v-layout>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-              <v-text-field
-                name="imgUrl"
-                label="Image-URL"
-                id="imgUrl"
-                required
-                v-model="imgUrl"
+              <v-btn raised class="primary" @click="onPickFile">Upload File</v-btn>
+              <input 
+                type="file" 
+                style="display: none" 
+                ref="inputFile" 
+                accept="image/*"
+                @change="onFilePicked"
               >
-              </v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row>
@@ -132,16 +132,37 @@
         if (!this.isValid) {
           return
         }
+        if (!this.image) {
+          return
+        }
         const meetUpData = {
           id: 'dasd46841313fdsf',
           title: this.title,
           description: this.description,
           location: this.location,
-          imgUrl: this.imgUrl,
-          date: this.submitDate
+          // imgUrl: this.imgUrl,
+          date: this.submitDate,
+          image: null
         }
         this.$store.dispatch('createMeetUp', meetUpData)
         this.$router.push('/meetups')
+      },
+      onPickFile () {
+        this.$refs.inputFile.click()
+      },
+      onFilePicked (event) {
+        const files = event.target.files
+        const filename = files[0].name
+        if (filename.lastIndexOf('.') <= 0) { // 判斷a.jpg中的 . 在哪個位置
+          return alert('Please Upload a Valid File!!')
+        }
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.imgUrl = fileReader.result
+        })
+        fileReader.readAsDataURL(files[0])
+        this.image = files[0]
+        console.log(this.image)
       }
     }
   }

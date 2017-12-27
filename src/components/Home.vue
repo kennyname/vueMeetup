@@ -15,8 +15,9 @@
       <v-flex xs12>
         <v-carousel style="cursor: pointer;" v-if="!loading">
           <v-carousel-item 
+            style="cursor: pointer;"
             v-for="meetup in meetups" 
-            v-bind:src="meetup.imgUrl" 
+            :src="meetup.imgUrl" 
             :key="meetup.id"
             @click="GoMeetup(meetup.id)"
           >
