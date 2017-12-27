@@ -78,17 +78,32 @@ export const store = new Vuex.Store({
         // id: payload.id, firebase會自動幫我們生成一組特殊id
         title: payload.title,
         description: payload.description,
-        imgUrl: payload.imgUrl,
         location: payload.location,
         date: payload.date.toISOString(),
         createId: getters.user.id
       }
+      let key
+      let imgUrl
       firebase.database().ref('data').push(meetup)
         .then(data => {
-          const key = data.key
+          key = data.key
+          return key
+        })
+        .then(key => {
+          const filename = payload.image.name
+          const ext = filename.slice(filename.lastIndexOf('.')) // abc.jpg 會回傳.jpg(檔名)
+          return firebase.storage().ref('meetups/' + key + '.' + ext).put(payload.image)
+        })
+        .then(filedata => {
+          console.log(filedata)
+          imgUrl = filedata.metadata.downloadURLs[0]
+          return firebase.database().ref('data').child(key).update({imgUrl})
+        })
+        .then(() => {
           commit('createMeetup', {
             ...meetup, // 解構賦值
-            id: key
+            id: key,
+            imgUrl: imgUrl
           })
         })
         .catch(err => {

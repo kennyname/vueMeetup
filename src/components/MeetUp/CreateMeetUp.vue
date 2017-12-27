@@ -102,7 +102,8 @@
         location: '',
         imgUrl: '',
         date: new Date().toISOString(),
-        time: new Date()
+        time: new Date(),
+        image: null
       }
     },
     computed: {
@@ -136,13 +137,11 @@
           return
         }
         const meetUpData = {
-          id: 'dasd46841313fdsf',
           title: this.title,
           description: this.description,
           location: this.location,
-          // imgUrl: this.imgUrl,
           date: this.submitDate,
-          image: null
+          image: this.image
         }
         this.$store.dispatch('createMeetUp', meetUpData)
         this.$router.push('/meetups')
@@ -162,7 +161,6 @@
         })
         fileReader.readAsDataURL(files[0])
         this.image = files[0]
-        console.log(this.image)
       }
     }
   }
