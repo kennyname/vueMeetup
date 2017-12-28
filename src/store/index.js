@@ -35,7 +35,7 @@ export const store = new Vuex.Store({
         return
       }
       state.user.registerMeetUp.push(id)
-      state.user.fbkeys[id] = payload.fbkey
+      state.user.fbkeys[id] = payload.fbkey // 建立新屬性fbkeys  obj[key] !== obj.key(重要)
     },
     unRegisterUserMeetUp (state, payload) {
       const registerMeetUp = state.user.registerMeetUp
@@ -237,6 +237,29 @@ export const store = new Vuex.Store({
     },
     autoSignIn ({commit}, payload) {
       commit('setUser', {id: payload.uid, registerMeetUp: [], fbkeys: {}})
+    },
+    fetchUserData ({commit, getters}) {
+      commit('setLoading', true)
+      firebase.database().ref('/users/' + getters.user.id + '/registration/').once('value')
+        .then(data => {
+          const dataPairs = data.val()
+          const registerdMeetup = []
+          const swappedPairs = {}
+          for (let key in dataPairs) {
+            registerdMeetup.push(dataPairs[key])
+            swappedPairs[dataPairs[key]] = key
+          }
+          const updateUser = {
+            id: getters.user.id,
+            registerMeetUp: registerdMeetup,
+            fbkeys: swappedPairs
+          }
+          commit('setLoading', false)
+          commit('setUser', updateUser)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     logout ({commit}) {
       firebase.auth().signOut()

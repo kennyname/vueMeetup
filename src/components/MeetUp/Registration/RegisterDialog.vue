@@ -42,7 +42,7 @@
       userIsRegister () {
         return this.$store.getters.user.registerMeetUp.findIndex(meetupId => {
           return meetupId === this.meetupId
-        }) >= 0
+        }) >= 0 // 因為找不到的話會回傳-1 找到的話會回傳所引值
       }
     },
     methods: {
