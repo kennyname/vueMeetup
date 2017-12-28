@@ -35,6 +35,20 @@ export const store = new Vuex.Store({
     setLoadMeetsUp (state, payload) {
       state.meetsupData = payload
     },
+    updateMeetup (state, payload) {
+      const editMeetup = state.meetsupData.find(meetup => {
+        return meetup.id === payload.id
+      })
+      if (payload.title) {
+        editMeetup.title = payload.title
+      }
+      if (payload.description) {
+        editMeetup.description = payload.description
+      }
+      if (payload.date) {
+        editMeetup.date = payload.date
+      }
+    },
     setUser (state, payload) {
       state.user = payload
     },
@@ -62,7 +76,8 @@ export const store = new Vuex.Store({
               description: obj[i].description,
               imgUrl: obj[i].imgUrl,
               location: obj[i].location,
-              createId: obj[i].createId
+              createId: obj[i].createId,
+              date: obj[i].date
             })
           }
           commit('setLoadMeetsUp', meetsup)
@@ -97,6 +112,7 @@ export const store = new Vuex.Store({
         .then(filedata => {
           console.log(filedata)
           imgUrl = filedata.metadata.downloadURLs[0]
+          firebase.database().ref('data').child(key).update({test: imgUrl})
           return firebase.database().ref('data').child(key).update({imgUrl})
         })
         .then(() => {
@@ -108,6 +124,28 @@ export const store = new Vuex.Store({
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    updateCreateMeetup ({commit}, payload) {
+      commit('setLoading', true)
+      const updateObj = {}
+      if (payload.title) {
+        updateObj.title = payload.title
+      }
+      if (payload.description) {
+        updateObj.description = payload.description
+      }
+      if (payload.date) {
+        updateObj.date = payload.date
+      }
+      firebase.database().ref('data').child(payload.id).update(updateObj)
+        .then(() => {
+          commit('setLoading', false)
+          commit('updateMeetup', payload)
+        })
+        .catch(err => {
+          console.log(err)
+          commit('setLoading', false)
         })
     },
     signUserUp ({commit}, payload) {

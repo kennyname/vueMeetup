@@ -9,11 +9,13 @@ import router from './router'
 import { store } from './store'
 import DateFilter from './filters/date'
 import alert from './components/share/alert'
+import EditMeetUp from './components/MeetUp/Edit/editMeetUp'
 
 Vue.use(Vuetify)
 Vue.filter('date', DateFilter)
 Vue.config.productionTip = false
 Vue.component('appAlert', alert)
+Vue.component('addEditMeetUp', EditMeetUp)
 
 /* eslint-disable no-new */
 new Vue({
