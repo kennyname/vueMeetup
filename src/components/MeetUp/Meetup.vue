@@ -17,7 +17,7 @@
             <div class="headline red--text">{{ meetup.title }}</div>
             <template v-if="userIsCreator">
               <v-spacer></v-spacer>
-              <addEditMeetUp :meetup="meetup"></addEditMeetUp>
+              <appEditMeetUp :meetup="meetup"></appEditMeetUp>
             </template>
           </v-card-title>
           <v-card-media
@@ -27,6 +27,10 @@
           </v-card-media>
           <v-card-text>
             <div class="info--text">{{ meetup.date | date}} - {{ meetup.location }}</div>
+            <div>
+              <appEditMeetUpDate :meetup="meetup" v-if="userIsCreator"></appEditMeetUpDate>
+              <appEditMeetUpTime :meetup="meetup" v-if="userIsCreator"></appEditMeetUpTime>
+            </div>
             <div>{{ meetup.description }}</div>
           </v-card-text>
           <v-card-actions>
