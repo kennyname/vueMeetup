@@ -9,11 +9,19 @@ import router from './router'
 import { store } from './store'
 import DateFilter from './filters/date'
 import alert from './components/share/alert'
+import EditMeetUp from './components/MeetUp/Edit/editMeetUp'
+import EditMeetUpDate from './components/MeetUp/Edit/editMeetUpDate'
+import EditMeetUpTime from './components/MeetUp/Edit/editMeetUpTime'
+import RegisterDialog from './components/MeetUp/Registration/RegisterDialog'
 
 Vue.use(Vuetify)
 Vue.filter('date', DateFilter)
 Vue.config.productionTip = false
 Vue.component('appAlert', alert)
+Vue.component('appEditMeetUp', EditMeetUp)
+Vue.component('appEditMeetUpDate', EditMeetUpDate)
+Vue.component('appEditMeetUpTime', EditMeetUpTime)
+Vue.component('appRegisterDialog', RegisterDialog)
 
 /* eslint-disable no-new */
 new Vue({
@@ -34,6 +42,7 @@ new Vue({
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoSignIn', user)
+        this.$store.dispatch('fetchUserData')
       }
     })
   }
