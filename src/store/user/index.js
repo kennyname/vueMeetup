@@ -6,12 +6,13 @@ export default {
   },
   mutations: {
     registerForMeetUp (state, payload) {
+      console.log(payload)
       const id = payload.id
-      if (state.user.registerMeetUp.findIndex(meetup => meetup.id === id) >= 0) { // 已經register的直接retun
+      if (state.user.registerMeetUp.findIndex(meetup => meetup.id === id) >= 0) { // 已經register的直接return
         return
       }
       state.user.registerMeetUp.push(id)
-      state.user.fbkeys[id] = payload.fbkey // 建立新屬性fbkeys  obj[key] !== obj.key(重要)
+      state.user.fbkeys[id] = payload.fbkey // 建立新屬性fbkeys => fbkeys{ dasdasfasgfs:sdfdsfsdfdsf}
     },
     unRegisterUserMeetUp (state, payload) {
       const registerMeetUp = state.user.registerMeetUp

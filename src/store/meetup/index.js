@@ -46,7 +46,7 @@ export default {
   actions: {
     loadMeetsUp ({commit}) {
       commit('setLoading', true)
-      firebase.database().ref('data').once('value')
+      firebase.database().ref('data').once('value') // 讀取資料
         .then(data => {
           const meetsup = []
           const obj = data.val()// firebase 內建 val()是一個物件
@@ -91,9 +91,7 @@ export default {
           return firebase.storage().ref('meetups/' + key + '.' + ext).put(payload.image)
         })
         .then(filedata => {
-          console.log(filedata)
           imgUrl = filedata.metadata.downloadURLs[0]
-          firebase.database().ref('data').child(key).update({test: imgUrl})
           return firebase.database().ref('data').child(key).update({imgUrl})
         })
         .then(() => {

@@ -38,7 +38,7 @@
     methods: {
       onSaveChange () {
         const newDate = new Date(this.meetup.date)
-        const hours = this.editTime.match(/^(\d+)/)[1]
+        const hours = this.editTime.match(/^(\d+)/)[0]
         const minutes = this.editTime.match(/:(\d+)/)[1]
         newDate.setHours(hours)
         newDate.setMinutes(minutes)
@@ -49,7 +49,7 @@
       }
     },
     created () {
-      this.editTime = new Date(this.meetup.date).toTimeString()
+      this.editTime = new Date(this.meetup.date)
     }
   }
 </script>
