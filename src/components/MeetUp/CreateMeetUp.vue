@@ -110,8 +110,7 @@
       isValid () {
         return this.title !== '' &&
               this.description !== '' &&
-              this.location !== '' &&
-              this.imgUrl !== ''
+              this.location !== ''
       },
       submitDate () {
         const date = new Date(this.date)
@@ -129,6 +128,22 @@
       }
     },
     methods: {
+      onPickFile () {
+        this.$refs.inputFile.click()
+      },
+      onFilePicked (event) {
+        const files = event.target.files
+        const filename = files[0].name
+        if (filename.lastIndexOf('.') <= 0) { // 判斷a.jpg中的 . 在哪個位置
+          return alert('Please Upload a Valid File!!')
+        }
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.imgUrl = fileReader.result
+        })
+        fileReader.readAsDataURL(files[0])
+        this.image = files[0]
+      },
       OnCreateMeetUp () {
         if (!this.isValid) {
           return
@@ -145,22 +160,6 @@
         }
         this.$store.dispatch('createMeetUp', meetUpData)
         this.$router.push('/meetups')
-      },
-      onPickFile () {
-        this.$refs.inputFile.click()
-      },
-      onFilePicked (event) {
-        const files = event.target.files
-        const filename = files[0].name
-        if (filename.lastIndexOf('.') <= 0) { // 判斷a.jpg中的 . 在哪個位置
-          return alert('Please Upload a Valid File!!')
-        }
-        const fileReader = new FileReader()
-        fileReader.addEventListener('load', () => {
-          this.imgUrl = fileReader.result
-        })
-        fileReader.readAsDataURL(files[0])
-        this.image = files[0]
       }
     }
   }

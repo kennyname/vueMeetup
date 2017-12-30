@@ -51,7 +51,8 @@
       }
     },
     created () {
-      this.editDate = new Date(this.meetup.date).toISOString()
+      // this.meetup.date 值 和下面的 new Date(this.meetup.date).toISOString()雖然一樣 但前者只是字串 如果用new date()的話不會變成物件也就不能操作setUTCdate等方法
+      this.editDate = new Date(this.meetup.date).toISOString() // 初始化時間 datePicker Must use ISO 8601 format.
     }
   }
 </script>
