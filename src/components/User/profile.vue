@@ -6,7 +6,7 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap class="mt-2">
-      <v-flex xs12 md6 sm6 
+      <v-flex xs12 md6 sm12 
         v-for="meet in meetup"
         :key="meet.id"
       >
@@ -20,7 +20,7 @@
                 >
                 </v-card-media>
               </v-flex>
-              <v-flex xs6 sm8 md9>
+              <v-flex xs8 sm8 md9>
                 <v-card-title primary-title>
                   <div>
                     <div class="headline white--text mb-0">{{meet.title}}</div>
@@ -30,9 +30,9 @@
                 <v-card-actions>
                   <v-btn flat :to="'/meetups/' + meet.id">
                     <v-icon left light>arrow_forward</v-icon>
-                    View MeetUp
+                    View
                   </v-btn>
-                  <v-btn class="error small">Delete Meetup</v-btn>
+                  <v-btn class="error small" @click="deletePersonalMeetup(meet.id)">Delete</v-btn>
                 </v-card-actions>
               </v-flex>
             </v-layout>
@@ -70,7 +70,7 @@
                 <v-card-actions>
                   <v-btn flat :to="'/meetups/' + 123">
                     <v-icon left light>arrow_forward</v-icon>
-                    View MeetUp
+                    View
                   </v-btn>
                   <v-btn class="error small">UnRegister</v-btn>
                 </v-card-actions>
@@ -93,6 +93,15 @@
       user () {
         return this.$store.getters.user
       }
+    },
+    methods: {
+      deletePersonalMeetup (id) {
+        this.meetup.splice(id, 1)
+        this.$store.dispatch('deleteMeetup', id)
+      }
+    },
+    created () {
+      this.$store.dispatch('loadPersonalMeetupData', this.user.id)
     }
   }
 </script>

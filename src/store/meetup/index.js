@@ -75,6 +75,33 @@ export default {
           commit('setLoading', false)
         })
     },
+    deleteMeetup ({commit}, payload) {
+      commit('setLoading', true)
+      firebase.database().ref('data').child(payload).remove()
+        .then(() => {
+          firebase.database().ref('data').once('value')
+            .then(data => {
+              const meetsup = []
+              const obj = data.val()// firebase 內建 val()是一個物件
+              for (let i in obj) { // for...in是來用物件迴圈的
+                meetsup.push({
+                  id: i,
+                  title: obj[i].title,
+                  description: obj[i].description,
+                  imgUrl: obj[i].imgUrl,
+                  location: obj[i].location,
+                  createId: obj[i].createId,
+                  date: obj[i].date
+                })
+              }
+              commit('setLoadMeetsUp', meetsup)
+              commit('setLoading', false)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     loadMeetsUp ({commit}) {
       commit('setLoading', true)
       firebase.database().ref('data').once('value') // 讀取資料
@@ -176,7 +203,9 @@ export default {
       }
     },
     loadPersonalMeetup (state) {
-      return state.personalMeetupData
+      return state.personalMeetupData.sort((meetupA, meetupB) => {
+        return meetupA.date < meetupB.date
+      })
     }
   }
 }
