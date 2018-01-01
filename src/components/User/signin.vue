@@ -39,7 +39,11 @@
                 </v-layout>
                 <v-layout row>
                   <v-flex xs12>
-                    <v-btn type="submit" :disabled="loading" :loading="loading">
+                    <v-btn type="submit"
+                      :disabled="loading"
+                      :loading="loading"
+                      class="success"
+                    >
                       <span slot="loader" class="custom-loader">
                         <v-icon light>cached</v-icon>
                       </span>
@@ -48,6 +52,38 @@
                   </v-flex>
                 </v-layout>
               </form>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-btn type="submit"
+                  :disabled="loading"
+                  :loading="loading"
+                  @click="onGoogleSignIn"
+                  class="error"
+                >
+                    <v-icon left>fa-google-plus</v-icon>
+                    <span slot="loader" class="custom-loader">
+                      <v-icon light>cached</v-icon>
+                    </span>
+                    Login with google
+                  </v-btn>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-btn type="submit"
+                  :disabled="loading"
+                  :loading="loading"
+                  @click="onFacebookSignIn"
+                  class="primary"
+                >
+                    <v-icon left>fa-facebook-square</v-icon>
+                    <span slot="loader" class="custom-loader">
+                      <v-icon light>cached</v-icon>
+                    </span>
+                    Login with facebook
+                  </v-btn>
+                </v-flex>
+              </v-layout>
             </v-container>
           </v-card-text>
         </v-card>
@@ -88,6 +124,12 @@
       },
       closeTab () {
         this.$store.dispatch('clearError')
+      },
+      onGoogleSignIn () {
+        this.$store.dispatch('GoogleSignIn')
+      },
+      onFacebookSignIn () {
+        this.$store.dispatch('facebookSignIn')
       }
     }
   }

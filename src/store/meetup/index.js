@@ -19,7 +19,8 @@ export default {
         location: 'Paris',
         description: 'Paris !!!'
       }
-    ]
+    ],
+    personalMeetupData: []
   },
   mutations: {
     createMeetup (state, payload) {
@@ -41,9 +42,39 @@ export default {
       if (payload.date) {
         editMeetup.date = payload.date
       }
+    },
+    loadPersonalMeetupData (state, payload) {
+      state.personalMeetupData = payload
     }
   },
   actions: {
+    loadPersonalMeetupData ({commit}, payload) {
+      commit('setLoading', true)
+      firebase.database().ref('data').once('value')
+        .then(data => {
+          const meetups = []
+          const obj = data.val()
+          for (let i in obj) {
+            if (obj[i].createId === payload) {
+              meetups.push({
+                id: i,
+                title: obj[i].title,
+                description: obj[i].description,
+                imgUrl: obj[i].imgUrl,
+                location: obj[i].location,
+                createId: obj[i].createId,
+                date: obj[i].date
+              })
+            }
+          }
+          commit('loadPersonalMeetupData', meetups)
+          commit('setLoading', false)
+        })
+        .catch(err => {
+          console.log(err)
+          commit('setLoading', false)
+        })
+    },
     loadMeetsUp ({commit}) {
       commit('setLoading', true)
       firebase.database().ref('data').once('value') // 讀取資料
@@ -143,6 +174,9 @@ export default {
           return meetup.id === meetUpId
         })
       }
+    },
+    loadPersonalMeetup (state) {
+      return state.personalMeetupData
     }
   }
 }

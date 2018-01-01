@@ -26,6 +26,35 @@ export default {
     }
   },
   actions: {
+    GoogleSignIn ({commit}) {
+      commit('setLoading', true)
+      var provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().languageCode = 'zh-TW'
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          commit('setLoading', false)
+        })
+      .catch(function (error) {
+        commit('setLoading', false)
+        console.log(error)
+      })
+    },
+    facebookSignIn ({commit}) {
+      commit('setLoading', true)
+      var provider = new firebase.auth.FacebookAuthProvider()
+      provider.addScope('user_birthday')
+      firebase.auth().languageCode = 'zh-TW'
+      provider.setCustomParameters({
+        'display': 'popup'
+      })
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          commit('setLoading', false)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
     registerForMeetUp ({commit, getters}, payload) {
       commit('setLoading', true)
       const user = getters.user
