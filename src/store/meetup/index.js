@@ -20,7 +20,8 @@ export default {
         description: 'Paris !!!'
       }
     ],
-    personalMeetupData: []
+    personalMeetupData: [],
+    registerMeetupData: []
   },
   mutations: {
     createMeetup (state, payload) {
@@ -45,6 +46,9 @@ export default {
     },
     loadPersonalMeetupData (state, payload) {
       state.personalMeetupData = payload
+    },
+    loadRegisterMeetup (state, payload) {
+      state.registerMeetupData = payload
     }
   },
   actions: {
@@ -75,15 +79,15 @@ export default {
           commit('setLoading', false)
         })
     },
-    deleteMeetup ({commit}, payload) {
+    deleteMeetup ({commit, dispatch}, payload) {
       commit('setLoading', true)
       firebase.database().ref('data').child(payload).remove()
         .then(() => {
           firebase.database().ref('data').once('value')
             .then(data => {
               const meetsup = []
-              const obj = data.val()// firebase 內建 val()是一個物件
-              for (let i in obj) { // for...in是來用物件迴圈的
+              const obj = data.val()
+              for (let i in obj) {
                 meetsup.push({
                   id: i,
                   title: obj[i].title,
@@ -95,11 +99,59 @@ export default {
                 })
               }
               commit('setLoadMeetsUp', meetsup)
+              dispatch('loadPersonalMeetupData', payload)
               commit('setLoading', false)
             })
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    loadRegisterMeetup ({commit}, payload) {
+      commit('setLoading', false)
+      let meetups = []
+      let register = []
+      firebase.database().ref('data').once('value')
+        .then(data => {
+          const obj = data.val()
+          for (let i in obj) {
+            if (obj[i].createId !== payload) {
+              meetups.push({
+                id: i,
+                title: obj[i].title,
+                description: obj[i].description,
+                imgUrl: obj[i].imgUrl,
+                location: obj[i].location,
+                createId: obj[i].createId,
+                date: obj[i].date
+              })
+            }
+          }
+        })
+      firebase.database().ref('/users/' + payload).child('/registration').once('value')
+        .then(data => {
+          const obj = data.val()
+          for (let i in obj) {
+            meetups.forEach(meetup => {
+              if (meetup.id === obj[i]) {
+                register.push({
+                  id: meetup.id,
+                  title: meetup.title,
+                  description: meetup.description,
+                  imgUrl: meetup.imgUrl,
+                  location: meetup.location,
+                  createId: meetup.createId,
+                  date: meetup.date
+                })
+              }
+            })
+          }
+          commit('loadRegisterMeetup', register)
+          commit('setLoading', false)
+        })
+        .catch(err => {
+          console.log(err)
+          commit('setLoading', false)
         })
     },
     loadMeetsUp ({commit}) {
@@ -206,6 +258,9 @@ export default {
       return state.personalMeetupData.sort((meetupA, meetupB) => {
         return meetupA.date < meetupB.date
       })
+    },
+    registerMeetup (state) {
+      return state.registerMeetupData
     }
   }
 }

@@ -6,7 +6,6 @@ export default {
   },
   mutations: {
     registerForMeetUp (state, payload) {
-      console.log(payload)
       const id = payload.id
       if (state.user.registerMeetUp.findIndex(meetup => meetup.id === id) >= 0) { // 已經register的直接return
         return
@@ -69,7 +68,7 @@ export default {
           commit('setLoading', false)
         })
     },
-    unRegisterForMeetUp ({commit, getters}, payload) {
+    unRegisterForMeetUp ({commit, getters, dispatch}, payload) {
       commit('setLoading', true)
       const user = getters.user
       if (!user.fbkeys) {
@@ -80,6 +79,7 @@ export default {
         .then(() => {
           commit('setLoading', false)
           commit('unRegisterUserMeetUp', payload)
+          dispatch('loadRegisterMeetup', user.id)
         })
         .catch(err => {
           console.log(err)
